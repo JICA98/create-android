@@ -4,6 +4,13 @@ export type Tokens = {
   packagePath: string;
   packageNamespace: string;
   packageName: string;
+  agp?: string;
+  kotlin?: string;
+  gradle?: string;
+  compileSdk?: string;
+  targetSdk?: string;
+  minSdk?: string;
+  ndk?: string;
 };
 
 export type RawInputs = {
@@ -34,7 +41,10 @@ export function deriveTokens(raw: RawInputs): Tokens {
 
 export function applyContentTokens(input: string, t: Tokens): string {
   return input.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
-    if (key in t) return t[key as keyof Tokens];
+    if (key in t) {
+      const v = t[key as keyof Tokens];
+      if (v !== undefined) return v;
+    }
     return match;
   });
 }

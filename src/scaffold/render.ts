@@ -39,7 +39,14 @@ async function walk(root: string): Promise<Entry[]> {
 function resolveRelPath(relPath: string, tokens: Tokens): string {
   return relPath
     .split("/")
-    .map((seg) => (seg === "__name__" ? tokens.name : seg))
+    .map((seg) => {
+      if (seg === "__name__") return tokens.name;
+      if (seg.startsWith("{{") && seg.endsWith("}}")) {
+        const key = seg.slice(2, -2) as keyof Tokens;
+        if (key in tokens) return tokens[key];
+      }
+      return seg;
+    })
     .join("/");
 }
 
