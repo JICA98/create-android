@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - name: Install
+        run: bun install
+      - name: Typecheck
+        run: bun run typecheck
+      - name: Unit + integration tests
+        run: bun test
+      - name: Snapshot consistency
+        run: bun run scripts/check-snapshot.ts
+
+  render-smoke:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: bun install
+      - name: Scaffold single
+        run: |
+          bun run src/cli.ts /tmp/out --name=Smoke --package=com.example.smoke --arch=single --no-install
+          ls /tmp/out/Smoke
+      - name: Scaffold multi
+        run: |
+          rm -rf /tmp/out
+          bun run src/cli.ts /tmp/out --name=Smoke --package=com.example.smoke --arch=multi --no-install
+          ls /tmp/out/Smoke
+      - name: Gradle help (single)
+        run: |
+          cd /tmp/out/Smoke
+          ./gradlew help
+      - name: Gradle help (multi)
+        run: |
+          cd /tmp/out/Smoke
+          ./gradlew help
+      - name: Gradle dependencies (single, app releaseRuntimeClasspath)
+        run: |
+          cd /tmp/out/Smoke
+          ./gradlew :app:dependencies --configuration releaseRuntimeClasspath --no-daemon
