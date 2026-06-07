@@ -7,6 +7,7 @@ export type Flags = {
   help?: boolean;
   force?: boolean;
   dryRun?: boolean;
+  noInstall?: boolean;
 };
 
 export type ParsedArgs = {
@@ -36,7 +37,7 @@ export function parseArgs(argv: string[]): ParseResult {
       const key = a.slice(2);
       if (key === "stack" || key === "version" || key === "help" || key === "force" || key === "dry-run" || key === "no-install") {
         if (key === "dry-run") flags.dryRun = true;
-        else if (key === "no-install") flags.dryRun = true;
+        else if (key === "no-install") flags.noInstall = true;
         else (flags as Record<string, unknown>)[key] = true;
         i++;
         continue;
