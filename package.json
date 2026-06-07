@@ -1,12 +1,24 @@
 {
-  "name": "android-kotlin-starter",
-  "module": "index.ts",
+  "name": "@flux/create-android",
+  "version": "0.1.0",
+  "description": "Scaffold a new Android project from a versioned template snapshot.",
   "type": "module",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "bin": { "create-android": "./bin/shim.js" },
+  "engines": { "node": ">=18" },
+  "files": ["bin", "dist", "templates", "stack", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "bun run scripts/build.ts",
+    "publish:pkg": "bun run scripts/publish.ts",
+    "check": "bun test && bun run scripts/check-snapshot.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "dependencies": {
+    "@clack/prompts": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.7.0"
   }
 }
