@@ -34,23 +34,32 @@ export function parseArgs(argv: string[]): ParseResult {
   while (i < argv.length) {
     const a = argv[i]!;
     if (a.startsWith("--")) {
-      const key = a.slice(2);
-      if (key === "stack" || key === "version" || key === "help" || key === "force" || key === "dry-run" || key === "no-install") {
-        if (key === "dry-run") flags.dryRun = true;
-        else if (key === "no-install") flags.noInstall = true;
-        else (flags as Record<string, unknown>)[key] = true;
+      const eqIdx = a.indexOf("=");
+      const rawKey = eqIdx >= 0 ? a.slice(2, eqIdx) : a.slice(2);
+      const inlineVal = eqIdx >= 0 ? a.slice(eqIdx + 1) : undefined;
+
+      if (rawKey === "stack" || rawKey === "version" || rawKey === "help" || rawKey === "force" || rawKey === "dry-run" || rawKey === "no-install") {
+        if (inlineVal !== undefined) return { ok: false, error: `flag --${rawKey} does not accept a value` };
+        if (rawKey === "dry-run") flags.dryRun = true;
+        else if (rawKey === "no-install") flags.noInstall = true;
+        else (flags as Record<string, unknown>)[rawKey] = true;
         i++;
         continue;
       }
-      const target = key as keyof Flags;
-      const next = argv[i + 1];
-      if (next === undefined) return { ok: false, error: `flag --${key} requires a value` };
-      if (target === "name" || target === "package" || target === "arch") {
-        (flags as Record<string, unknown>)[target] = next;
-        i += 2;
+      const key = rawKey as keyof Flags;
+      let value: string | undefined = inlineVal;
+      if (value === undefined) {
+        value = argv[i + 1];
+        if (value === undefined) return { ok: false, error: `flag --${rawKey} requires a value` };
+        if (value.startsWith("-")) return { ok: false, error: `flag --${rawKey} requires a value (got ${value})` };
+        i++;
+      }
+      if (key === "name" || key === "package" || key === "arch") {
+        (flags as Record<string, unknown>)[key] = value;
+        i++;
         continue;
       }
-      return { ok: false, error: `unknown flag --${key}` };
+      return { ok: false, error: `unknown flag --${rawKey}` };
     } else if (a.startsWith("-") && a.length === 2) {
       const short = a.slice(1);
       const target = SHORTS[short];
