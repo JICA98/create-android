@@ -41,6 +41,8 @@ function buildTokens(snap: Snapshot, inputs: CreateInputs): Tokens {
     targetSdk: String(snap.targetSdk),
     minSdk: String(snap.minSdk),
     ndk: snap.ndk,
+    composeBom: snap.composeBom,
+    hilt: snap.hilt,
   };
 }
 

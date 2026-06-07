@@ -11,6 +11,8 @@ export type Tokens = {
   targetSdk?: string;
   minSdk?: string;
   ndk?: string;
+  composeBom?: string;
+  hilt?: string;
 };
 
 export type RawInputs = {

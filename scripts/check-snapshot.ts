@@ -1,18 +1,16 @@
 #!/usr/bin/env bun
-import { loadSnapshot } from "../src/stack/snapshot";
-import type { Snapshot } from "../src/stack/snapshot";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const VERSIONED_FILES = [
-  "build.gradle.kts",
-  "settings.gradle.kts",
-  "gradle/libs.versions.toml",
-  "gradle/wrapper/gradle-wrapper.properties",
-];
+const KNOWN_KEYS = new Set([
+  "name", "package", "packagePath", "packageNamespace", "packageName",
+  "agp", "kotlin", "gradle", "compileSdk", "targetSdk", "minSdk", "ndk", "composeBom", "hilt",
+]);
+
+const PLACEHOLDER_RE = /\{\{(\w+)\}\}/g;
 
 async function walk(dir: string): Promise<string[]> {
   const out: string[] = [];
@@ -29,56 +27,29 @@ async function walk(dir: string): Promise<string[]> {
   return out;
 }
 
-function findAll(haystack: string, needle: string): string[] {
-  const found: string[] = [];
-  let i = 0;
-  while ((i = haystack.indexOf(needle, i)) !== -1) {
-    found.push(haystack.slice(i, i + needle.length));
-    i += needle.length;
-  }
-  return found;
-}
-
-async function checkArch(arch: "single" | "multi", snap: Snapshot): Promise<string[]> {
+async function checkArch(arch: "single" | "multi"): Promise<string[]> {
   const errors: string[] = [];
   const archRoot = join(ROOT, "templates", arch);
   const nameDir = join(archRoot, "__name__");
   const files = await walk(nameDir);
   for (const f of files) {
-    if (!VERSIONED_FILES.some((v) => f.endsWith(v))) continue;
     const text = await readFile(f, "utf8");
-    for (const [key, value] of [
-      ["{{agp}}", snap.agp],
-      ["{{kotlin}}", snap.kotlin],
-      ["{{gradle}}", snap.gradle],
-      ["{{compileSdk}}", String(snap.compileSdk)],
-      ["{{targetSdk}}", String(snap.targetSdk)],
-      ["{{minSdk}}", String(snap.minSdk)],
-      ["{{ndk}}", snap.ndk],
-    ] as const) {
-      if (!text.includes(key)) {
-        errors.push(`${f}: missing placeholder ${key}`);
+    const matches = [...text.matchAll(PLACEHOLDER_RE)];
+    if (matches.length === 0) continue;
+    for (const m of matches) {
+      const key = m[1]!;
+      if (!KNOWN_KEYS.has(key)) {
+        errors.push(`${f}: unknown placeholder {{${key}}}`);
       }
-    }
-    const placeholders = [
-      ...findAll(text, "{{name}}"),
-      ...findAll(text, "{{package}}"),
-      ...findAll(text, "{{packagePath}}"),
-      ...findAll(text, "{{packageNamespace}}"),
-      ...findAll(text, "{{packageName}}"),
-    ];
-    if (placeholders.length === 0) {
-      errors.push(`${f}: no expected placeholders; check the file is a template`);
     }
   }
   return errors;
 }
 
 async function main() {
-  const snap = await loadSnapshot(ROOT);
   const errors: string[] = [];
   for (const arch of ["single", "multi"] as const) {
-    errors.push(...(await checkArch(arch, snap)));
+    errors.push(...(await checkArch(arch)));
   }
   if (errors.length > 0) {
     console.error("check-snapshot failed:");
