@@ -1,0 +1,12 @@
+{
+  "agp": "9.1.1",
+  "kotlin": "2.4.0",
+  "gradle": "9.5.1",
+  "compileSdk": 37,
+  "targetSdk": 37,
+  "minSdk": 24,
+  "ndk": "29.0.14206865",
+  "composeBom": "2026.05.00",
+  "hilt": "2.55",
+  "notes": "Android 17 (API 37) at last-beta. Stable AOSP later in 2026."
+}
