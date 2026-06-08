@@ -3,7 +3,6 @@
 
     <application
         android:label="{{name}}"
-        android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.App">
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
