@@ -7,6 +7,6 @@
   "minSdk": 24,
   "ndk": "29.0.14206865",
   "composeBom": "2026.05.00",
-  "hilt": "2.55",
+  "hilt": "2.59.2",
   "notes": "Android 17 (API 37) at last-beta. Stable AOSP later in 2026."
 }
