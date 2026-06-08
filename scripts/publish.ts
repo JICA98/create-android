@@ -44,6 +44,10 @@ async function main() {
   const version = versionArg.split("=")[1]!;
   const dryRun = process.argv.includes("--dry-run");
 
+  if (process.env.NPM_TOKEN) {
+    process.env["NPM_CONFIG_//registry.npmjs.org/:_authToken"] = process.env.NPM_TOKEN;
+  }
+
   await setVersion(ROOT, version);
   for (const p of PLATFORMS) {
     await setVersion(resolve(ROOT, "packages", p), version);

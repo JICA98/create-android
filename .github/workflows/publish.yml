@@ -4,9 +4,6 @@ on:
   push:
     tags: ['v*']
 
-permissions:
-  id-token: write
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -30,3 +27,4 @@ jobs:
         run: bun run scripts/publish.ts --version=${VERSION#v}
         env:
           VERSION: ${{ github.ref_name }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
