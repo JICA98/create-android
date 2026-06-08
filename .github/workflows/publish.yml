@@ -4,6 +4,9 @@ on:
   push:
     tags: ['v*']
 
+permissions:
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -20,11 +23,6 @@ jobs:
           java-version: 17
 
       - uses: android-actions/setup-android@v3
-
-      - name: Authenticate with npm
-        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - run: bun install
 
