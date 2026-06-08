@@ -56,11 +56,15 @@ bun run src/cli.ts /tmp/out --name=Smoke --package=com.example.smoke --arch=mult
 
 ## Publish
 
+Push a version tag to trigger the CI publish workflow:
+
 ```sh
-bun run scripts/publish.ts --version=1.2.0
+git tag v0.2.0
+git push origin v0.2.0
 ```
 
-(Add `--dry-run` to simulate.)
+The CI workflow builds per-platform binaries, runs tests, and publishes all
+packages to npm. The npm token is configured as a repo secret (`NPM_TOKEN`).
 
 ## License
 
