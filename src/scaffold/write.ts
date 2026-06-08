@@ -7,7 +7,7 @@ import {
 } from "node:fs/promises";
 import { dirname, basename } from "node:path";
 
-const EXECUTABLE = new Set(["gradlew", "gradlew.bat"]);
+const EXECUTABLE = new Set(["gradlew", "gradlew.bat", "build-and-install.sh"]);
 
 export async function ensureDir(p: string): Promise<void> {
   await mkdir(p, { recursive: true });
