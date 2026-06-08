@@ -33,7 +33,7 @@ Each scaffolder release ships a pinned Android stack. Run `npx create-android my
 
 | Scaffolder | AGP | Kotlin | Gradle | compileSdk |
 |---|---|---|---|---|
-| 0.1.x (dev) | 9.1.1 | 2.4.0 | 9.5.1 | 37 |
+| 0.1.0 | 9.1.1 | 2.4.0 | 9.5.1 | 37 |
 
 ## Agents
 
