@@ -16,5 +16,6 @@ android {
 
 dependencies {
     api(platform(libs.compose.bom))
+    api(libs.compose.material3)
     api(libs.compose.ui)
 }

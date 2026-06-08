@@ -26,4 +26,5 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp("org.jetbrains.kotlin:kotlin-metadata-jvm:{{kotlin}}")
 }

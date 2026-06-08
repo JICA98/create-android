@@ -56,7 +56,15 @@ jobs:
         run: |
           cd /tmp/out/single/Smoke
           ./gradlew :app:dependencies --configuration releaseRuntimeClasspath --no-daemon
-      - name: Build APK (single)
+      - name: Build APK (single debug)
         run: |
           cd /tmp/out/single/Smoke
           ./gradlew :app:assembleDebug --no-daemon
+      - name: Build APK (single release)
+        run: |
+          cd /tmp/out/single/Smoke
+          ./gradlew :app:assembleRelease --no-daemon
+      - name: Build APK (multi release)
+        run: |
+          cd /tmp/out/multi/Smoke
+          ./gradlew :app:assembleRelease --no-daemon
