@@ -35,6 +35,79 @@ Each scaffolder release ships a pinned Android stack. Run `npx create-android my
 |---|---|---|---|---|
 | 0.1.x (dev) | 9.1.1 | 2.4.0 | 9.5.1 | 37 |
 
+## Agents
+
+### Scaffolding for an AI agent
+
+When an AI agent (Claude, Cursor, Copilot, etc.) is asked to build or set up
+an Android project, run the scaffolder with all flags provided to avoid
+interactive prompts:
+
+```sh
+npx create-android /path/to/project \
+  --name=MyApp \
+  --package=com.example.myapp \
+  --arch=single \
+  --no-install
+```
+
+### Required flags for non-interactive use
+
+| Flag | Why |
+|---|---|
+| `--name` | App name (PascalCase). Without it the agent gets a prompt. |
+| `--package` | Android application id. Without it the agent gets a prompt. |
+| `--arch` | `single` or `multi`. Without it the agent gets a prompt. |
+| `--no-install` | Suppresses the "Next steps" printout. |
+
+### Typical workflows
+
+**Start a new single-module feature project:**
+```sh
+npx create-android my-app \
+  --name=MyApp \
+  --package=com.mycompany.myapp \
+  --arch=single \
+  --no-install
+```
+
+**Start a multi-module (NowInAndroid-style) project:**
+```sh
+npx create-android my-app \
+  --name=MyApp \
+  --package=com.mycompany.myapp \
+  --arch=multi \
+  --no-install
+```
+
+**Add a composable screen to a scaffolded project:**
+```sh
+# After scaffolding, the project has feature/ modules (multi) or
+# app/src/main/kotlin/<packagePath>/feature/ directories (single).
+# Add new screens by creating a composable function in the correct
+# package and registering it in the navigation graph.
+```
+
+### Checking the stack version
+
+```sh
+npx create-android /tmp/scratch --stack
+```
+
+Returns the pinned AGP, Kotlin, Gradle, compileSdk, etc. for the current
+scaffolder version — useful when the agent needs to know the exact versions
+before writing additional build logic.
+
+### Notes for agents
+
+- The `--force` flag overwrites non-empty directories (use cautiously).
+- The `--dry-run` flag renders to a temp dir and prints a summary without
+  writing files — useful for previewing what would be generated.
+- After scaffolding, run `./gradlew :app:assembleDebug` to verify the project
+  compiles.
+- All templates ship with a test keystore so release builds work out of the
+  box, but **replace `keystore/test.jks` before publishing to any store**.
+
 ## How it works
 
 - The npm package is a tiny Node 18+ shim that dispatches to a per-platform
