@@ -34,25 +34,29 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+      - uses: android-actions/setup-android@v3
       - run: bun install
       - name: Scaffold single
         run: |
-          bun run src/cli.ts /tmp/out --name=Smoke --package=com.example.smoke --arch=single --no-install
-          ls /tmp/out/Smoke
+          bun run src/cli.ts /tmp/out/single --name=Smoke --package=com.example.smoke --arch=single --no-install
+          ls /tmp/out/single/Smoke
       - name: Scaffold multi
         run: |
-          rm -rf /tmp/out
-          bun run src/cli.ts /tmp/out --name=Smoke --package=com.example.smoke --arch=multi --no-install
-          ls /tmp/out/Smoke
+          bun run src/cli.ts /tmp/out/multi --name=Smoke --package=com.example.smoke --arch=multi --no-install
+          ls /tmp/out/multi/Smoke
       - name: Gradle help (single)
         run: |
-          cd /tmp/out/Smoke
+          cd /tmp/out/single/Smoke
           ./gradlew help
       - name: Gradle help (multi)
         run: |
-          cd /tmp/out/Smoke
+          cd /tmp/out/multi/Smoke
           ./gradlew help
-      - name: Gradle dependencies (single, app releaseRuntimeClasspath)
+      - name: Gradle dependencies (app releaseRuntimeClasspath)
         run: |
-          cd /tmp/out/Smoke
+          cd /tmp/out/single/Smoke
           ./gradlew :app:dependencies --configuration releaseRuntimeClasspath --no-daemon
+      - name: Build APK (single)
+        run: |
+          cd /tmp/out/single/Smoke
+          ./gradlew :app:assembleDebug --no-daemon
