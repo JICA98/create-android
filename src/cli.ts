@@ -23,6 +23,9 @@ Flags:
 `;
 
 function repoRootFromHere(): string {
+  if (process.env.CREATE_ANDROID_ROOT) {
+    return process.env.CREATE_ANDROID_ROOT;
+  }
   const here = dirname(fileURLToPath(import.meta.url));
   return resolve(here, "..");
 }

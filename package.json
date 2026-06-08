@@ -1,12 +1,18 @@
 {
-  "name": "@flux/create-android",
+  "name": "create-android",
   "version": "0.1.0",
   "description": "Scaffold a new Android project from a versioned template snapshot.",
   "type": "module",
-  "private": true,
   "bin": { "create-android": "./bin/shim.js" },
   "engines": { "node": ">=18" },
-  "files": ["bin", "dist", "templates", "stack", "README.md", "LICENSE"],
+  "files": ["bin", "templates", "stack", "README.md", "LICENSE"],
+  "optionalDependencies": {
+    "create-android-darwin-arm64": "0.0.0-dev",
+    "create-android-darwin-x64": "0.0.0-dev",
+    "create-android-linux-arm64": "0.0.0-dev",
+    "create-android-linux-x64": "0.0.0-dev",
+    "create-android-windows-x64": "0.0.0-dev"
+  },
   "scripts": {
     "build": "bun run scripts/build.ts",
     "publish:pkg": "bun run scripts/publish.ts",

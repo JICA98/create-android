@@ -1,7 +1,7 @@
 {
-  "name": "@flux/create-android-windows-x64",
+  "name": "create-android-windows-x64",
   "version": "0.0.0-dev",
-  "description": "Windows x64 binary for @flux/create-android.",
+  "description": "Windows x64 binary for create-android.",
   "license": "MIT",
   "files": ["bin"],
   "os": ["windows"],

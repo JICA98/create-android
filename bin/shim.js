@@ -6,18 +6,19 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
+const mainRoot = resolve(here, "..");
 const mainPkg = JSON.parse(
-  readFileSync(resolve(here, "..", "package.json"), "utf8"),
+  readFileSync(resolve(mainRoot, "package.json"), "utf8"),
 );
 
 const require = createRequire(import.meta.url);
 
 const map = {
-  "darwin+arm64": "@flux/create-android-darwin-arm64",
-  "darwin+x64":   "@flux/create-android-darwin-x64",
-  "linux+x64":    "@flux/create-android-linux-x64",
-  "linux+arm64":  "@flux/create-android-linux-arm64",
-  "win32+x64":    "@flux/create-android-windows-x64",
+  "darwin+arm64": "create-android-darwin-arm64",
+  "darwin+x64":   "create-android-darwin-x64",
+  "linux+x64":    "create-android-linux-x64",
+  "linux+arm64":  "create-android-linux-arm64",
+  "win32+x64":    "create-android-windows-x64",
 };
 
 const key = `${process.platform}+${process.arch}`;
@@ -27,7 +28,7 @@ if (!pkg) {
   console.error(`create-android: unsupported platform ${key}`);
   console.error(
     `Supported: ${Object.keys(map).join(", ")}. ` +
-    `For other platforms, run via Bun: \`bunx @flux/create-android@${mainPkg.version}\`.`,
+    `For other platforms, run via Bun: \`bunx create-android@${mainPkg.version}\`.`,
   );
   process.exit(1);
 }
@@ -38,13 +39,16 @@ try {
 } catch {
   console.error(
     `create-android: platform binary not installed (${pkg}). ` +
-    `Re-run with: npm i -g @flux/create-android@${mainPkg.version}`,
+    `Re-run with: npm i -g create-android@${mainPkg.version}`,
   );
   process.exit(1);
 }
 
 try {
-  execFileSync(binPath, process.argv.slice(2), { stdio: "inherit" });
+  execFileSync(binPath, process.argv.slice(2), {
+    stdio: "inherit",
+    env: { ...process.env, CREATE_ANDROID_ROOT: mainRoot },
+  });
 } catch (e) {
   process.exit(e.status ?? 1);
 }

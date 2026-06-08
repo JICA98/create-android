@@ -21,6 +21,17 @@ async function setVersion(dir: string, version: string) {
   await writeFile(p, JSON.stringify(pkg, null, 2) + "\n");
 }
 
+async function updateOptionalDepVersions(root: string, version: string) {
+  const p = resolve(root, "package.json");
+  const pkg = JSON.parse(await readFile(p, "utf8"));
+  if (pkg.optionalDependencies) {
+    for (const key of Object.keys(pkg.optionalDependencies)) {
+      pkg.optionalDependencies[key] = version;
+    }
+  }
+  await writeFile(p, JSON.stringify(pkg, null, 2) + "\n");
+}
+
 async function main() {
   await $`bun test`.quiet();
   await $`bun run scripts/check-snapshot.ts`.quiet();
@@ -37,6 +48,7 @@ async function main() {
   for (const p of PLATFORMS) {
     await setVersion(resolve(ROOT, "packages", p), version);
   }
+  await updateOptionalDepVersions(ROOT, version);
   console.log(`[publish] bumped all packages to ${version}`);
 
   await $`bun run scripts/build.ts`.quiet();
@@ -48,7 +60,7 @@ async function main() {
     await $`npm ${args}`.cwd(dir).quiet();
   }
   const mainArgs = dryRun ? ["publish", "--dry-run", "--access", "public"] : ["publish", "--access", "public"];
-  console.log(`[publish] @flux/create-android`);
+  console.log(`[publish] create-android`);
   await $`npm ${mainArgs}`.cwd(ROOT).quiet();
 
   console.log("[publish] done");

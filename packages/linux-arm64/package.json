@@ -1,7 +1,7 @@
 {
-  "name": "@flux/create-android-linux-arm64",
+  "name": "create-android-linux-arm64",
   "version": "0.0.0-dev",
-  "description": "Linux arm64 binary for @flux/create-android.",
+  "description": "Linux arm64 binary for create-android.",
   "license": "MIT",
   "files": ["bin"],
   "os": ["linux"],

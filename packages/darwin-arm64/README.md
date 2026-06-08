@@ -1,3 +1,3 @@
-# @flux/create-android-darwin-arm64
+# create-android-darwin-arm64
 
-Platform binary for [@flux/create-android](https://www.npmjs.com/package/@flux/create-android).
+Platform binary for [create-android](https://www.npmjs.com/package/create-android).

@@ -1,4 +1,4 @@
-# `@flux/create-android`
+# `create-android`
 
 Scaffold a new Android project from a versioned, pinned template snapshot.
 Works with `npx` and `bunx`.
@@ -6,13 +6,13 @@ Works with `npx` and `bunx`.
 ## Quick start
 
 ```sh
-npx @flux/create-android my-app
+npx create-android my-app
 ```
 
 Or pin a specific scaffolder version:
 
 ```sh
-npx @flux/create-android@1.4.2 my-app
+npx create-android@1.4.2 my-app
 ```
 
 ## Flags
@@ -29,7 +29,7 @@ npx @flux/create-android@1.4.2 my-app
 
 ## Pinned stack
 
-Each scaffolder release ships a pinned Android stack. Run `npx @flux/create-android my-app --stack` to see it.
+Each scaffolder release ships a pinned Android stack. Run `npx create-android my-app --stack` to see it.
 
 | Scaffolder | AGP | Kotlin | Gradle | compileSdk |
 |---|---|---|---|---|

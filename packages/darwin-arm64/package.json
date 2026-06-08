@@ -1,7 +1,7 @@
 {
-  "name": "@flux/create-android-darwin-arm64",
+  "name": "create-android-darwin-arm64",
   "version": "0.0.0-dev",
-  "description": "macOS arm64 binary for @flux/create-android.",
+  "description": "macOS arm64 binary for create-android.",
   "license": "MIT",
   "files": ["bin"],
   "os": ["darwin"],
